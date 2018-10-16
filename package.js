@@ -18,10 +18,3 @@ Package.onUse(function(api)
     api.use("ecmascript");
     api.mainModule("src/meteor-seeder.js");
 });
-
-Package.onTest(function(api) 
-{
-    api.use("ecmascript");
-    api.use("meteor-seeder");
-    api.mainModule("test/meteor-seeder.test.js");
-});
