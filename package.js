@@ -1,7 +1,7 @@
 Package.describe(
 {
     name: "m4dnation:meteor-seeder",
-    version: "1.0.0",
+    version: "1.0.2",
     summary: "Database seeder for Meteor.",
     git: "https://github.com/M4dNation/meteor-seeder",
     documentation: "README.md"

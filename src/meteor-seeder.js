@@ -22,9 +22,11 @@ class Seeder
             return false;
         }
     
+        this.count = 0;
         this.collection = collection;
 
         this.options = {
+        enableLogging: false,
         resetCollection: false,
         seedIfExistingData: false,
         ...options,
@@ -35,7 +37,13 @@ class Seeder
             if (this.options.resetCollection) 
                 this.collection.remove({});
 
+            if (this.options.enableLogging)
+                console.log("Starting seeding...");
+
             this.seedCollection();
+
+            if (this.options.enableLogging)
+                console.log("Seeding completed!");
         } 
         else 
         {
@@ -45,21 +53,44 @@ class Seeder
 
     seedCollection()
     {
-        if (Obj.isFalsy(this.options.seedIfExistingData) && this.collectionHasExistingData())
+        if (!this.options.seedIfExistingData && this.collectionHasExistingData())
+        {
+            if (this.options.enableLogging)
+                console.log(`Seeding aborted: ${this.collection._name} has existing data.`);
+
             return ;
+        }
 
         if (this.options.data)
         {
             for (let item of this.options.data)
             {
                 if (Obj.isEqual(this.collection._name, "users"))
+                {
                     this.createUser(item);
-                else this.collection.insert(item);
+                    this.count++;
+                }
+                else 
+                {
+                    if (this.options.enableLogging)
+                    {
+                        console.log(`Inserting item ${this.count}...`);
+                    }
+
+                    this.collection.insert(item);
+
+                    if (this.options.enableLogging)
+                    {
+                        console.log(`Item ${this.count} has been inserted.`)
+                    }
+
+                    this.count++;
+                }
             }
         }
     }
 
-    collectionHasExistingData(modelCount = -1) 
+    collectionHasExistingData(modelCount = 0) 
     {
         return this.collection.find().count() > modelCount;
     }
@@ -71,8 +102,23 @@ class Seeder
         if (user.username) isExistingUserConditions.push({ username: user.username });
         const isExistingUser = this.collection.findOne({ $or: isExistingUserConditions });
 
-        if (Obj.isFalsy(isExistingUser)) 
+        if (Obj.isFalsy(isExistingUser))
+        {
+            if (this.options.enableLogging)
+                console.log(`Creating [item ${this.count}] user ${user.email}... `);
+
             Accounts.createUser(user);
+
+            if (this.options.enableLogging)
+                console.log(`User ${user.email} [item ${this.count} has been created.`);
+        }
+        else
+        {
+            if (this.options.enableLogging)
+            {
+                console.log(`User creation aborted: ${user.email} [item ${this.count}] already exists.`);
+            }
+        }
     }
 }
 
