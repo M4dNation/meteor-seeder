@@ -61,31 +61,31 @@ class Seeder
             return ;
         }
 
-        if (this.options.data)
+        if (!this.options.data)
+            return ;
+
+        for (let item of this.options.data)
         {
-            for (let item of this.options.data)
+            if (Obj.isEqual(this.collection._name, "users"))
             {
-                if (Obj.isEqual(this.collection._name, "users"))
+                this.createUser(item);
+                this.count++;
+            }
+            else 
+            {
+                if (this.options.enableLogging)
                 {
-                    this.createUser(item);
-                    this.count++;
+                    console.log(`Inserting item ${this.count}...`);
                 }
-                else 
+
+                this.collection.insert(item);
+
+                if (this.options.enableLogging)
                 {
-                    if (this.options.enableLogging)
-                    {
-                        console.log(`Inserting item ${this.count}...`);
-                    }
-
-                    this.collection.insert(item);
-
-                    if (this.options.enableLogging)
-                    {
-                        console.log(`Item ${this.count} has been inserted.`)
-                    }
-
-                    this.count++;
+                    console.log(`Item ${this.count} has been inserted.`)
                 }
+
+                this.count++;
             }
         }
     }
@@ -102,23 +102,21 @@ class Seeder
         if (user.username) isExistingUserConditions.push({ username: user.username });
         const isExistingUser = this.collection.findOne({ $or: isExistingUserConditions });
 
-        if (Obj.isFalsy(isExistingUser))
+        if (Obj.isTruthy(isExistingUser))
         {
             if (this.options.enableLogging)
-                console.log(`Creating [item ${this.count}] user ${user.email}... `);
-
-            Accounts.createUser(user);
-
-            if (this.options.enableLogging)
-                console.log(`User ${user.email} [item ${this.count} has been created.`);
-        }
-        else
-        {
-            if (this.options.enableLogging)
-            {
                 console.log(`User creation aborted: ${user.email} [item ${this.count}] already exists.`);
-            }
+
+            return ;
         }
+
+        if (this.options.enableLogging)
+            console.log(`Creating [item ${this.count}] user ${user.email}... `);
+
+        Accounts.createUser(user);
+
+        if (this.options.enableLogging)
+            console.log(`User ${user.email} [item ${this.count} has been created.`);
     }
 }
 
