@@ -25,11 +25,12 @@ class Seeder
         this.count = 0;
         this.collection = collection;
 
-        this.options = {
-        enableLogging: false,
-        resetCollection: false,
-        seedIfExistingData: false,
-        ...options,
+        this.options = 
+        {
+            enableLogging: false,
+            resetCollection: false,
+            seedIfExistingData: false,
+            ...options,
         };
 
         if (Meteor.isServer) 

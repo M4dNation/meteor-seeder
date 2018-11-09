@@ -8,6 +8,10 @@ It uses a simple exported constructor in order to provide simple seeding to a Mo
 **Note: This package is based on [seeder](https://cleverbeagle.com/packages/seeder/v2) written by [cleverbeagle](https://github.com/cleverbeagle). Most of the credits goes to them.  
 If you don't need our trimmed version of the package, please use the original one.**
 
+## Install
+
+`meteor add m4dnation:meteor-seeder`
+
 ## Usage
 
 `meteor-seeder` exports a factory of the `Seeder` class you can import:
