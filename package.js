@@ -17,10 +17,6 @@ Package.onUse(function(api) {
 });
 
 Package.onTest(function(api) {
-  Npm.depends({
-    jest: "23.6.0"
-  });
-
   api.use("m4dnation:meteor-seeder");
   api.use(["ecmascript", "meteortesting:mocha"]);
   api.mainModule("tests/meteor-seeder.test.js");
